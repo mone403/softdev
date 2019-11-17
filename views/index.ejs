@@ -18,23 +18,46 @@
     <div class="container">
 
         <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span> Node Authentication</h1>
+            <h1><span class="fa fa-briefcase"></span>Job Central</h1>
 
             <p>Login or Register with:</p>
             
-            <a href="/profile" class="btn btn-default"><span class="fa fa-user"></span>Profile</a>
-            <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
-            <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>            
+            <a href="/profile" class="btn btn-default"><span class="fa fa-user-o"></span>Profile</a>
+            <a href="/login" class="btn btn-default"><span class="fa fa-user-o"></span> Local Login</a>
+            <a href="/signup" class="btn btn-default"><span class="fa fa-user-o"></span> Local Signup</a>            
         </div>
+
+        <form action="/search" method="GET">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="">ค้นหางาน</label>
+                <input type="text" class="form-control" name="SearchJob">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="">ค้นหาสถานที่</label>
+               <select class="form-control" name="SearchPlace">
+                        <option>เลือกสถานที่</option>
+                        <option>คณะวิศวกรรมศาสตร์</option>
+                        <option>คณะสถาปัตยกรรมศาสตร์</option>
+                        <option></option>
+                        <option></option>
+                        <option></option>
+                </select>
+              </div>              
+                <button type="submit" class="btn btn-danger mb-2">Find</button>
+            </div>
+        </form>        
+        
         
         <div class="row">
 
             <!-- LOCAL INFORMATION -->
+            <% if(post){ %>
             <% post.forEach(function(doc){ %>
    
             <div class="col-sm-6">
                 <div class="well">
-                    <h3><span class="fa fa-user"></span> <%= doc.Name %> </h3>
+                    <h3><span class="fa fa-user-circle"></span> <%= doc.Name %> </h3>
                       <p>
                         <strong>Owner</strong>:
                         <%= doc.Owner %><br>
@@ -59,7 +82,8 @@
                      <a href=  '/applyjob/<%= doc._id %>' class="btn btn-primary">Apply Now</a>                    
                 </div>
             </div>
-            <% }) %>  
+            <% }) %>
+            <% } %>  
         </div>
 
 

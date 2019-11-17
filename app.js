@@ -25,7 +25,7 @@ SERVER.prototype.handleDatabase = function () {
   mongoose.Promise = Promise;
   //database connection
   var promise = mongoose.connect(dbConfig.url, {
-    useMongoClient: true,
+    useNewUrlParser: true
   });
 
   promise.then(function (db) {
@@ -56,7 +56,7 @@ SERVER.prototype.configurePassport = function () {
 
   //session setup
   app.use(session({
-    secret: 'mynameismoohyong',
+    secret: 'mysoftdev',
     resave: true,
     saveUninitialized: true
   }));

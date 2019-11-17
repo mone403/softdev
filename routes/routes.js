@@ -9,17 +9,46 @@ module.exports = function (app, passport) {
             if(err){
                 throw err;
             }else{
-                res.render('index.ejs',{
-                    post:docs
+                res.send({
+                    post:docs,
+                    page:'index'
                 }); 
             }
         });
          
     });
 
+    //ค้นหางาน
+   app.get('/search',function (req,res) {
+        if(req.query.SearchJob && req.query.SearchPlace != "เลือกสถานที่"){
+        Post.find({$and:[{Name:req.query.SearchJob},{Place:req.query.SearchPlace}]},function(err,job){
+            if(err){
+                throw err;;
+            }else{
+                res.send({
+                    post:job,
+                    page:search
+                });
+            }        
+        });
+        }else{
+            Post.find({$or:[{Name:req.query.SearchJob},{Place:req.query.SearchPlace}]},function(err,job){
+                if(err){
+                    throw err;;
+                }else{
+                    res.send({
+                        post:job,
+                        page:'search'
+                    });
+                }        
+            });
+
+        }
+   });
+
     //หน้าเข้าสู่ระบบ
     app.get('/login', function (req, res) {        
-        res.render('login.ejs', { message: req.flash('loginMessage') });
+        res.send({ message: req.flash('loginMessage'),page:login });
     });
 
     //ตัวจัดการเข้าสู่ระบบ
@@ -31,7 +60,7 @@ module.exports = function (app, passport) {
 
     //หน้าสมัครสมาชิก
     app.get('/signup', function (req, res) {
-        res.render('signup.ejs', { message: req.flash('signupMessage') });
+        res.send({ message: req.flash('signupMessage'),page:signup });
     });
 
     // ตัวจัดการการสมัครสมาชิก
@@ -47,9 +76,10 @@ module.exports = function (app, passport) {
             if(err){
                 throw err;
             }else{
-                res.render('profile.ejs',{
+                res.send({
                     user: req.user,
-                    post: docs            
+                    post: docs,
+                    page:'profile'            
                 });
             }
         });
@@ -58,7 +88,7 @@ module.exports = function (app, passport) {
 
     //หน้าสร้างงาน
     app.get('/create',isLoggedIn,function(req,res){
-        res.render('createpost.ejs');
+        res.send({page:'createpost'});
         //console.log(req.user);    
         
     });
@@ -78,9 +108,12 @@ module.exports = function (app, passport) {
             Detail:req.body.Jobdetail  
         });
         newPost.save(function(err){
-            if(err)throw err;                        
+            if(err)throw err;
+            else{
+                res.send({Status:'success'});
+            }                        
         });
-        res.redirect('/profile')
+        res.send({Status:'failed'});
     });   
     
     //แก้ไขงาน
@@ -89,8 +122,9 @@ module.exports = function (app, passport) {
             if(err){
                 throw err;
             }else{
-                res.render('edit.ejs',{
-                    post:docs
+                res.send({
+                    post:docs,
+                    page:'edit'
                 });
             }
         }); 
@@ -113,8 +147,8 @@ module.exports = function (app, passport) {
             Detail:req.body.Jobdetail
         }}).then((docs)=>{
             if(docs){
-                console.log(docs);
-                res.redirect('/profile');
+                //console.log(docs);
+                res.send({status:"success"});
             }            
         })
     });
@@ -126,7 +160,8 @@ module.exports = function (app, passport) {
                 throw err;
             }else{
                 res.send({
-                    post:docs
+                    post:docs,
+                    page:detail
                 });
             }
         });         
@@ -138,7 +173,7 @@ module.exports = function (app, passport) {
             if(err){
                 throw err;
             }else if(docs){
-                res.render('applyjob.ejs',{post:docs});
+                res.send({post:docs,page:"applyjob"});
             }else{
                 res.status(404);
             }
@@ -162,8 +197,10 @@ module.exports = function (app, passport) {
         });
         newApply.save(function(err){
             if(err) throw err;
+            else{
+                res.send({Status:"success"});
+            }
         });
-        res.redirect('/');
     });
 
     //ดูรายชื่อผูุ้สมัครของงาน
@@ -172,17 +209,27 @@ module.exports = function (app, passport) {
             if(err){
                 throw err;
             }else{
-                res.send({
-                    candidate:docs
-                });
+                Post.find({_id:req.params.id},function(err,job){
+                    if(err){
+                        throw err;
+                    }else{
+                        res.send({
+                            candidate:docs,
+                            post:job,
+                            page:"candidate"
+                        });
+                    }
+                    
+                })
             }
-        });         
+            
+        });     
     });
 
     //ออกจากระบบ
     app.get('/logout', function (req, res) {
         req.logout();
-        res.redirect('/');
+        res.send({status:"logout"});
     });
 };
 
@@ -192,5 +239,5 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
 
-    res.redirect('/login');
+    res.send({status:"not Login"});
 }

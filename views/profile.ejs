@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <title>Authentication</title>
+    <!-- load bootstrap css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- load fontawesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            padding-top: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="page-header text-center">
+            <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+            <a href="/create" class="btn btn-default btn-sm">Post</a>
+            <a href="/logout" class="btn btn-default btn-sm">Logout</a>            
+        </div>
+
+        <div class="row">
+
+            <!-- LOCAL INFORMATION -->
+            <% if(post) { %>
+            <% post.forEach(function(doc){ %>
+   
+            <div class="col-sm-6">
+                <div class="well">
+                    <h3><span class="fa fa-user"></span> <%= doc.Name %> </h3>
+                      <p>
+                        <strong>Owner</strong>:
+                        <%= doc.Owner %><br>
+                            <strong>Type</strong>:
+                            <%= doc.Type %><br>
+                                <strong>Require</strong>:
+                                <%= doc.Require %><br>
+                                    <strong>Place</strong>:
+                                    <%= doc.Place %><br>
+                                        <strong>Time</strong>:
+                                        <%= doc.Time %><br>
+                                            <strong>Money</strong>:
+                                            <%= doc.Money %><br>
+                                                <strong>People</strong>:
+                                                <%= doc.People %><br>
+                                                    <strong>Detail</strong>:
+                                                    <%= doc.Detail %><br>
+                                
+                     </p>
+                     <button type="submit" class="btn btn-danger">Delete</button>
+                     <a href=  '/edit/<%= doc._id %>' class="btn btn-primary">Edit</a>
+                </div>
+            </div>
+            <% }) %>
+            <% } %>  
+        </div>
+
+    </div>
+</body>
+
+</html>
